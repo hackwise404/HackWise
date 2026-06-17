@@ -1,0 +1,2462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/x-icon" href="\webpage\assets\favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HackWise Academy – Build Skills. Hack Smart. Secure The Future.</title>
+<meta name="description" content="Kerala's premier cybersecurity academy. Practical labs, real-world projects, mentorship, and career-focused learning pathways.">
+<meta property="og:title" content="HackWise Academy">
+<meta property="og:description" content="Build Skills. Hack Smart. Secure The Future.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+/* ===== TOKENS ===== */
+:root {
+  --red: #E50914;
+  --red2: #FF2E38;
+  --red-glow: rgba(229,9,20,0.5);
+  --bg: #050505;
+  --surf: #111111;
+  --surf2: #1A1A1A;
+  --white: #FFFFFF;
+  --muted: #A0A0A0;
+  --border: rgba(255,255,255,0.07);
+  --glass: rgba(17,17,17,0.7);
+  --font-d: 'Barlow Condensed', sans-serif;
+  --font-b: 'Barlow', sans-serif;
+  --font-m: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-b);
+  overflow-x: hidden;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--red); }
+
+/* ===== NOISE OVERLAY ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ===== NAV ===== */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background .4s, padding .4s;
+}
+#nav.scrolled {
+  background: rgba(5,5,5,0.92);
+  backdrop-filter: blur(24px);
+  padding: 14px 40px;
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  margin-left: 150px;
+}
+.nav-logo img {
+  height: 50px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(229,9,20,0.4));
+}
+.nav-logo-text {
+  font-family: var(--font-d);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--white);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+.nav-links a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-enroll {
+  padding: 10px 24px;
+  background: var(--white);
+  color: #000;
+  font-family: var(--font-b);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all .25s;
+}
+.nav-enroll:hover {
+  background: var(--red);
+  color: var(--white);
+}
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+.hamburger span {
+  display: block;
+  width: 26px; height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all .3s;
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(5,5,5,0.98);
+  backdrop-filter: blur(24px);
+  z-index: 499;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: var(--font-d);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color .2s;
+}
+.mobile-nav a:hover { color: var(--red); }
+
+/* ===== HERO ===== */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #050505;
+}
+.hero-bg-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 40%, rgba(229,9,20,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 80% 60%, rgba(229,9,20,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+/* Scanlines */
+.hero-bg-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0.04) 2px,
+    rgba(0,0,0,0.04) 4px
+  );
+  pointer-events: none;
+}
+
+/* BG TYPOGRAPHY */
+.hero-bg-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2; /* BELOW hero-inner (z-index:10) and robot (z-index:15) — always behind robot */
+}
+.hero-bg-word {
+  font-family: var(--font-d);
+  font-size: clamp(72px, 20vw, 340px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(229, 9, 20, 0.5);
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  opacity: 0.5; /* exactly 50% transparency as requested */
+}
+
+/* HERO LAYOUT: 3-column */
+.hero-inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 100px 40px 60px;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 0.85fr;
+  align-items: center;
+  min-height: 100vh;
+  gap: 0;
+}
+
+/* LEFT PANEL */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 20;
+}
+.hero-academy-label {
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-academy-label::before {
+  content: '';
+  display: inline-block;
+  width: 24px; height: 2px;
+  background: var(--red);
+}
+h1.hero-title {
+  font-family: var(--font-d);
+  font-size: clamp(48px, 6vw, 86px);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+h1.hero-title .line-red { color: var(--red); }
+.hero-desc {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.75;
+  max-width: 400px;
+  margin-bottom: 36px;
+}
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 48px;
+}
+.btn-main {
+  padding: 14px 32px;
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font-b);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all .25s;
+  box-shadow: 0 0 30px rgba(229,9,20,0.35);
+}
+.btn-main:hover {
+  background: var(--red2);
+  box-shadow: 0 0 50px rgba(229,9,20,0.6);
+  transform: translateY(-2px);
+}
+.btn-outline {
+  padding: 14px 32px;
+  background: transparent;
+  color: #fff;
+  font-family: var(--font-b);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 3px;
+  transition: all .25s;
+}
+.btn-outline:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.hero-socials {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.social-icon {
+  width: 38px; height: 38px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  font-size: 15px;
+  color: var(--muted);
+  transition: all .25s;
+}
+.social-icon:hover {
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 14px rgba(229,9,20,0.35);
+}
+.social-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-m);
+  letter-spacing: 0.1em;
+}
+
+/* CENTER: ROBOT */
+.hero-robot-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+}
+
+/* HACKWISE text when moved inside robot-wrap on mobile */
+.hero-robot-wrap .hero-bg-word-inline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-d);
+  font-size: clamp(56px, 26vw, 160px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(229, 9, 20, 0.5);
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: 1;   /* behind #robot-img which is z-index:2 */
+  width: max-content;
+}
+.robot-glow-ring {
+  position: absolute;
+  width: 55%;
+  height: 55%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(229,9,20,0.25) 0%, transparent 70%);
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(30px);
+  pointer-events: none;
+}
+.robot-shadow {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  height: 30px;
+  background: rgba(229,9,20,0.3);
+  border-radius: 50%;
+  filter: blur(22px);
+  pointer-events: none;
+}
+#robot-img {
+  width: 100%;
+  max-width: 580px;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 40px 80px rgba(229,9,20,0.25)) drop-shadow(0 0 40px rgba(229,9,20,0.1));
+  animation: robotFloat 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+@keyframes robotFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  25% { transform: translateY(-14px) rotate(0.5deg); }
+  75% { transform: translateY(-6px) rotate(-0.3deg); }
+}
+
+/* RIGHT PANEL: STATS */
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+  z-index: 20;
+}
+.stat-ring {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+}
+.stat-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+.stat-ring-track { stroke: rgba(255,255,255,0.07); fill: none; }
+.stat-ring-fill {
+  fill: none;
+  stroke: var(--red);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(229,9,20,0.8));
+  transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-content {
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+.stat-num {
+  font-family: var(--font-d);
+  font-size: 34px;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.chapter {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 100px 0;
+}
+.chapter-bg-word {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+.chapter-bg-word span {
+  font-family: var(--font-d);
+  font-size: clamp(55px, 16vw, 300px);
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  user-select: none;
+  opacity: 0.5;
+}
+.chapter-num {
+  position: absolute;
+  top: 40px; left: 40px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: rgba(229,9,20,0.6);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.chapter-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  opacity: 0.3;
+}
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+  width: 100%;
+  position: relative;
+  z-index: 5;
+}
+
+/* ===== ABOUT CHAPTER ===== */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.about-tag {
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.chapter-title {
+  font-family: var(--font-d);
+  font-size: clamp(40px, 5vw, 68px);
+  font-weight: 900;
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.chapter-title .red { color: var(--red); }
+.body-text {
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+.pillar {
+  padding: 24px;
+  background: var(--surf);
+  border: 1px solid rgba(229,9,20,0.15);
+  border-radius: 12px;
+  transition: all .3s;
+}
+.pillar:hover {
+  border-color: var(--red);
+  background: rgba(229,9,20,0.06);
+  transform: translateY(-4px);
+}
+.pillar-icon {
+  width: 50px; height: 50px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(229,9,20,0.08);
+  border: 1px solid rgba(229,9,20,0.25);
+  border-radius: 12px;
+  color: var(--red);
+  margin-bottom: 14px;
+  transition: all .3s;
+}
+.pillar-icon svg { width: 24px; height: 24px; }
+.pillar:hover .pillar-icon { background: rgba(229,9,20,0.16); border-color: var(--red); transform: scale(1.05); }
+.pillar h4 {
+  font-family: var(--font-d);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.pillar p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* About visual */
+.about-visual {
+  position: relative;
+}
+.about-robot-mini {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+  filter: drop-shadow(0 20px 60px rgba(229,9,20,0.2));
+  animation: robotFloat 5s ease-in-out infinite;
+  animation-delay: .5s;
+}
+.about-robot-stats {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.about-robot-stats.left-stats { left: -20px; top: 30%; }
+.about-robot-stats.right-stats { right: -20px; top: 20%; }
+.mini-stat {
+  padding: 10px 16px;
+  background: rgba(11,11,11,0.9);
+  border: 1px solid rgba(229,9,20,0.25);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+.mini-stat .mn { font-family: var(--font-d); font-size: 22px; font-weight: 900; color: var(--red); line-height:1; }
+.mini-stat .ml { font-size: 10px; color: var(--muted); font-family: var(--font-m); letter-spacing:.1em; }
+
+/* ===== ROADMAP ===== */
+.roadmap-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  padding: 40px 0;
+}
+.roadmap-flow::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(229,9,20,0.5), var(--red), rgba(229,9,20,0.5), transparent);
+  transform: translateX(-50%);
+}
+.rm-node {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.rm-node:nth-child(odd) { flex-direction: row; }
+.rm-node:nth-child(even) { flex-direction: row-reverse; }
+.rm-card {
+  flex: 1;
+  padding: 28px 32px;
+  background: var(--glass);
+  border: 1px solid rgba(229,9,20,0.18);
+  border-radius: 14px;
+  backdrop-filter: blur(20px);
+  transition: all .3s;
+}
+.rm-card:hover {
+  border-color: var(--red);
+  transform: scale(1.03);
+  box-shadow: 0 0 40px rgba(229,9,20,0.15);
+}
+.rm-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--red);
+  border-radius: 4px;
+  font-family: var(--font-m);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.rm-card h3 {
+  font-family: var(--font-d);
+  font-size: 22px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.rm-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.rm-center { width: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rm-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 20px rgba(229,9,20,0.8), 0 0 40px rgba(229,9,20,0.4);
+  border: 3px solid var(--bg);
+  flex-shrink: 0;
+}
+.rm-spacer { flex: 1; }
+.rm-split {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+  padding: 24px 0;
+}
+.rm-split-card {
+  flex: 1;
+  padding: 22px;
+  background: var(--glass);
+  border: 1px solid rgba(229,9,20,0.18);
+  border-radius: 12px;
+  backdrop-filter: blur(16px);
+  text-align: center;
+  transition: all .3s;
+}
+.rm-split-card:hover {
+  border-color: var(--red);
+  box-shadow: 0 0 30px rgba(229,9,20,0.15);
+  transform: translateY(-4px);
+}
+.rm-split-card h4 {
+  font-family: var(--font-d);
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 8px 0 4px;
+}
+.rm-split-card p { font-size: 12px; color: var(--muted); }
+.rm-outcome {
+  width: 100%;
+  max-width: 800px;
+  padding: 36px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(229,9,20,0.18), rgba(229,9,20,0.04));
+  border: 1px solid var(--red);
+  text-align: center;
+  margin-top: 24px;
+}
+.rm-outcome h3 {
+  font-family: var(--font-d);
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.rm-outcome p { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+/* ===== PROGRAM CARDS ===== */
+.prog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.prog-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+.prog-card {
+  padding: 36px;
+  background: var(--glass);
+  border: 1px solid rgba(229,9,20,0.15);
+  border-radius: 16px;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  transition: all .35s ease;
+}
+.prog-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s ease;
+}
+.prog-card:hover::before { transform: scaleX(1); }
+.prog-card:hover {
+  transform: translateY(-10px);
+  border-color: rgba(229,9,20,0.4);
+  box-shadow: 0 30px 80px rgba(229,9,20,0.15);
+}
+.prog-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  background: var(--red);
+  border-radius: 4px;
+  font-family: var(--font-m);
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.prog-name {
+  font-family: var(--font-d);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.prog-full { font-size: 12px; color: var(--muted); margin-bottom: 16px; font-style: italic; }
+.prog-dur {
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: var(--red);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 6px;
+}
+.topics-wrap { margin-bottom: 24px; }
+.topics-label {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.topics-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.topic {
+  padding: 3px 9px;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  transition: all .2s;
+}
+.topic:hover { border-color: var(--red); color: var(--white); }
+.prog-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.proj-count { font-family: var(--font-m); font-size: 12px; color: var(--muted); }
+.proj-count strong { color: var(--red); font-size: 20px; }
+
+/* ===== LABS SECTION ===== */
+.labs-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.labs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.lab-card {
+  padding: 18px;
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all .25s;
+  cursor: default;
+}
+.lab-card:hover {
+  border-color: var(--red);
+  background: rgba(229,9,20,0.06);
+  transform: translateX(4px);
+}
+.lab-card .lico {
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--red);
+  flex-shrink: 0;
+}
+.lab-card .lico svg { width: 100%; height: 100%; }
+.lab-card span { font-size: 13px; font-weight: 600; }
+.lab-features { display: flex; flex-direction: column; gap: 24px; }
+.lab-feat {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+.lab-feat-ico {
+  width: 50px; height: 50px;
+  background: rgba(229,9,20,0.1);
+  border: 1px solid rgba(229,9,20,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--red);
+  flex-shrink: 0;
+}
+.lab-feat-ico svg { width: 24px; height: 24px; }
+.lab-feat-txt h4 {
+  font-family: var(--font-d);
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.lab-feat-txt p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* ===== CERTS RADIAL ===== */
+.certs-radial {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  margin: 60px auto 0;
+}
+.cert-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: var(--surf);
+  border: 2px solid var(--red);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 30px rgba(229,9,20,0.4), 0 0 60px rgba(229,9,20,0.15);
+  z-index: 10;
+}
+.cert-center img {
+  width: 80px;
+  object-fit: contain;
+}
+.cert-orbit {
+  position: absolute;
+  top: 50%; left: 50%;
+  border: 1px solid rgba(229,9,20,0.08);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbitSpin 30s linear infinite;
+}
+.cert-orbit-2 { animation-direction: reverse; animation-duration: 20s; }
+@keyframes orbitSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+.cert-planet {
+  position: absolute;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: var(--surf);
+  border: 1px solid rgba(229,9,20,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--red);
+  box-shadow: 0 0 15px rgba(229,9,20,0.2);
+  animation: counterRotate 30s linear infinite;
+  transition: all .25s;
+  cursor: default;
+}
+.cert-planet:hover {
+  background: var(--red);
+  color: #fff;
+  border-color: var(--red2);
+  box-shadow: 0 0 25px rgba(229,9,20,0.6);
+}
+.cert-orbit-2 .cert-planet { animation-duration: 20s; animation-direction: reverse; }
+@keyframes counterRotate { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+
+.cert-vendors-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 48px;
+}
+.cert-vendor-tag {
+  padding: 8px 20px;
+  background: var(--surf);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: all .25s;
+}
+.cert-vendor-tag:hover { border-color: var(--red); color: var(--white); background: rgba(229,9,20,0.08); }
+
+/* ===== CAREER TIMELINE ===== */
+.career-timeline {
+  position: relative;
+  padding-left: 48px;
+  margin-top: 48px;
+}
+.career-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--red), rgba(229,9,20,0.1));
+}
+.career-step {
+  position: relative;
+  padding: 0 0 44px 40px;
+}
+.career-step::before {
+  content: '';
+  position: absolute;
+  left: -4px; top: 6px;
+  width: 14px; height: 14px;
+  background: var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(229,9,20,0.7);
+}
+.career-step h4 {
+  font-family: var(--font-d);
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.career-step p { font-size: 13px; color: var(--muted); line-height: 1.6; max-width: 500px; }
+
+/* ===== COMMUNITY ===== */
+.community-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+}
+.comm-card {
+  padding: 36px 28px;
+  background: var(--glass);
+  border: 1px solid rgba(229,9,20,0.12);
+  border-radius: 14px;
+  backdrop-filter: blur(20px);
+  text-align: center;
+  transition: all .3s;
+}
+.comm-card:hover {
+  border-color: var(--red);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(229,9,20,0.12);
+}
+.comm-icon { margin-bottom: 16px; display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: rgba(229,9,20,0.08); border: 1px solid rgba(229,9,20,0.2); border-radius: 14px; color: var(--red); transition: all .3s; }
+.comm-card:hover .comm-icon { background: rgba(229,9,20,0.16); border-color: var(--red); transform: scale(1.05); }
+.comm-icon svg { width: 26px; height: 26px; }
+.comm-card h4 {
+  font-family: var(--font-d);
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+}
+.comm-card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* ===== CONTACT CHAPTER ===== */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.contact-robot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.contact-robot img {
+  width: 100%;
+  max-width: 420px;
+  filter: drop-shadow(0 20px 60px rgba(229,9,20,0.3));
+  animation: robotFloat 4s ease-in-out infinite;
+}
+.contact-info-list { display: flex; flex-direction: column; gap: 20px; margin-top: 32px; }
+.ci {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.ci-icon {
+  width: 44px; height: 44px;
+  background: rgba(229,9,20,0.1);
+  border: 1px solid rgba(229,9,20,0.2);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.ci-text h5 { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); font-family: var(--font-m); margin-bottom: 4px; }
+.ci-text a, .ci-text p { color: var(--white); text-decoration: none; font-size: 15px; font-weight: 500; transition: color .2s; display: block; }
+.ci-text a:hover { color: var(--red); }
+
+/* CONTACT FORM */
+.cf { display: flex; flex-direction: column; gap: 14px; margin-top: 32px; }
+.cf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.cf label { font-size: 10px; font-family: var(--font-m); letter-spacing: .15em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+.cf input, .cf select, .cf textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--surf2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--white);
+  font-family: var(--font-b);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.cf input:focus, .cf select:focus, .cf textarea:focus { border-color: var(--red); }
+.cf select option { background: #111; }
+.cf textarea { resize: vertical; min-height: 110px; }
+.cf-success {
+  display: none;
+  padding: 14px;
+  background: rgba(39,201,63,0.1);
+  border: 1px solid rgba(39,201,63,0.3);
+  border-radius: 8px;
+  color: #4ade80;
+  font-size: 14px;
+  text-align: center;
+}
+.map-card {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 300px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.map-card iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(15,15,15,0.9);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.map-btn:hover {
+    background: #f70d1a;
+    border-color: #f70d1a;
+}
+
+/* ===== FOOTER ===== */
+#footer {
+  background: #0A0A0A;
+  border-top: 1px solid var(--border);
+  padding: 64px 40px 32px;
+}
+.foot-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+}
+.foot-logo { margin-bottom: 16px; }
+.foot-logo img { height: 44px; object-fit: contain; }
+.foot-desc { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 24px; max-width: 280px; }
+.foot-socials { display: flex; gap: 10px; }
+.fsoc {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--surf);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 16px;
+  transition: all .25s;
+}
+.fsoc:hover { border-color: var(--red); color: var(--red); background: rgba(229,9,20,0.08); }
+.foot-col h5 {
+  font-family: var(--font-d);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 18px;
+}
+.foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.foot-col ul li a { color: var(--muted); text-decoration: none; font-size: 13px; transition: color .2s; }
+.foot-col ul li a:hover { color: var(--white); }
+.foot-nl { display: flex; gap: 8px; margin-top: 8px; }
+.foot-nl input {
+  flex: 1; padding: 10px 14px; background: var(--surf2); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--white); font-size: 13px; outline: none; transition: border-color .2s;
+}
+.foot-nl input:focus { border-color: var(--red); }
+.foot-nl button {
+  padding: 10px 16px; background: var(--red); border: none; border-radius: 6px;
+  color: #fff; font-size: 13px; font-weight: 800; cursor: pointer; transition: all .25s;
+}
+.foot-nl button:hover { background: var(--red2); }
+.foot-bottom {
+  max-width: 1280px; margin: 24px auto 0;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.foot-bottom p { font-size: 12px; color: var(--muted); }
+.foot-tagline { font-family: var(--font-m); font-size: 12px; color: var(--red); letter-spacing: .1em; }
+
+/* ===== WHATSAPP ===== */
+#wa { position: fixed; bottom: 28px; right: 28px; z-index: 800; }
+.wa-fab {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: #25D366;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(37,211,102,0.5);
+  font-size: 26px;
+  transition: transform .25s;
+  animation: floatWa 3s ease-in-out infinite;
+}
+.wa-fab:hover { transform: scale(1.1); }
+@keyframes floatWa { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.wa-popup {
+  position: absolute; bottom: 70px; right: 0; width: 300px;
+  background: var(--surf);
+  border: 1px solid rgba(229,9,20,0.2);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  opacity: 0; transform: translateY(16px) scale(.95);
+  pointer-events: none; transition: all .3s ease;
+  transform-origin: bottom right;
+}
+.wa-popup.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; }
+.wa-head { background: #075E54; padding: 14px 18px; display: flex; align-items: center; gap: 12px; }
+.wa-av { width: 40px; height: 40px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.wa-head-info h5 { font-size: 14px; font-weight: 700; color: #fff; }
+.wa-head-info p { font-size: 11px; color: rgba(255,255,255,.7); }
+.wa-body { padding: 18px; }
+.wa-bubble { background: #1F2C34; border-radius: 10px 10px 10px 0; padding: 12px 14px; margin-bottom: 14px; }
+.wa-bubble p { font-size: 13px; color: #E9EBF0; }
+.wa-bubble .wt { font-size: 10px; color: #8696A0; margin-top: 4px; }
+.wa-opts { display: flex; flex-direction: column; gap: 8px; }
+.wa-opt {
+  padding: 10px 14px; background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(37,211,102,0.2); border-radius: 8px;
+  font-size: 13px; color: #25D366; cursor: pointer;
+  text-decoration: none; display: block; text-align: center;
+  font-weight: 500; transition: all .2s;
+}
+.wa-opt:hover { background: rgba(37,211,102,0.1); border-color: #25D366; }
+
+/* ===== SCROLL ANIMATIONS ===== */
+.reveal { opacity: 0; transform: translateY(40px); transition: opacity .8s ease, transform .8s ease; }
+.reveal.up { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity .8s ease, transform .8s ease; }
+.reveal-left.up { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(40px); transition: opacity .8s ease, transform .8s ease; }
+.reveal-right.up { opacity: 1; transform: translateX(0); }
+.reveal-scale { opacity: 0; transform: scale(.92); transition: opacity .8s ease, transform .8s ease; }
+.reveal-scale.up { opacity: 1; transform: scale(1); }
+
+/* delay helpers */
+.d1 { transition-delay: .1s; }
+.d2 { transition-delay: .2s; }
+.d3 { transition-delay: .3s; }
+.d4 { transition-delay: .4s; }
+.d5 { transition-delay: .5s; }
+
+/* ===== STICKY MOBILE BOTTOM BAR ===== */
+#mobile-cta {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 600;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  background: rgba(5,5,5,0.96);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  gap: 10px;
+}
+#mobile-cta a {
+  flex: 1;
+  text-align: center;
+  padding: 13px 8px;
+  font-family: var(--font-b);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all .2s;
+}
+#mobile-cta .mcta-enroll { background: var(--red); color: #fff; box-shadow: 0 0 20px rgba(229,9,20,0.4); }
+#mobile-cta .mcta-call { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.2); }
+
+/* ===== RESPONSIVE – LAPTOP (≤1280px) ===== */
+@media (max-width: 1280px) {
+  .nav-logo { margin-left: 60px; }
+  .hero-inner { max-width: 100%; padding: 100px 32px 60px; }
+  .container { padding: 0 32px; }
+}
+
+/* ===== RESPONSIVE – TABLET LANDSCAPE / SMALL LAPTOP (≤1100px) ===== */
+@media (max-width: 1100px) {
+  .nav-logo { margin-left: 0; }
+  .hero-inner {
+    grid-template-columns: 1fr 1fr;
+    padding: 100px 28px 60px;
+    gap: 24px;
+  }
+  .hero-stats { display: none; }
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .prog-grid-3 { grid-template-columns: 1fr 1fr; }
+  .certs-radial { width: 380px; height: 380px; }
+  .about-grid { gap: 40px; }
+  .about-robot-stats.left-stats { left: -10px; }
+  .about-robot-stats.right-stats { right: -10px; }
+  .contact-layout { gap: 40px; }
+}
+
+/* ===== RESPONSIVE – TABLET PORTRAIT (≤860px) ===== */
+@media (max-width: 860px) {
+  /* Nav */
+  .nav-links, .nav-enroll { display: none; }
+  .hamburger { display: flex; }
+  #nav { padding: 18px 28px; }
+  #nav.scrolled { padding: 14px 28px; }
+
+  /* Hero */
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 130px 28px 60px;
+    text-align: center;
+  }
+  .hero-left { align-items: center; }
+  .hero-academy-label { justify-content: center; }
+  .hero-desc { max-width: 560px; margin-left: auto; margin-right: auto; }
+  .hero-buttons { justify-content: center; }
+  .hero-socials { justify-content: center; }
+  .hero-robot-wrap { order: -1; }
+  #robot-img { max-width: 300px; }
+  /* Hero HACKWISE bg text: visible, 50% opacity, behind robot on mobile */
+  .hero-bg-text { display: flex; z-index: 2; }
+  .hero-bg-word { font-size: clamp(60px, 22vw, 180px); opacity: 0.5; }
+
+  /* Sections */
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-visual { display: flex; justify-content: center; }
+  .about-robot-mini { max-width: 300px; }
+  .about-robot-stats { display: none; }
+  .pillars { grid-template-columns: 1fr 1fr; }
+
+  /* Programs */
+  .prog-grid { grid-template-columns: 1fr 1fr; }
+  .prog-grid-3 { grid-template-columns: 1fr; }
+
+  /* Labs */
+  .labs-showcase { grid-template-columns: 1fr; gap: 32px; }
+  .labs-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Certs */
+  .certs-radial { width: 300px; height: 300px; }
+
+  /* Community */
+  .community-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Contact */
+  .contact-layout { grid-template-columns: 1fr; gap: 0; }
+  .contact-robot { display: none; }
+
+  /* Footer */
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+
+  /* Roadmap */
+  .rm-node:nth-child(even) { flex-direction: row; }
+  .rm-spacer { display: none; }
+  .rm-split { flex-direction: column; gap: 12px; }
+  .rm-card { padding: 22px 20px; }
+}
+
+/* ===== RESPONSIVE – MOBILE (≤600px) ===== */
+@media (max-width: 600px) {
+  /* Nav */
+  #nav { padding: 14px 16px; }
+  #nav.scrolled { padding: 12px 16px; }
+  .nav-logo-text { font-size: 17px; }
+  .nav-logo img { height: 38px; }
+
+  /* Mobile nav font */
+  .mobile-nav a { font-size: 28px; }
+
+  /* Layout */
+  .container { padding: 0 16px; }
+  .chapter { padding: 72px 0; }
+  .chapter-num { left: 16px; top: 28px; }
+
+  /* Hero */
+  .hero-inner { padding: 110px 16px 48px; gap: 28px; }
+  h1.hero-title { font-size: clamp(38px, 10vw, 54px); }
+  .hero-desc { font-size: 14px; }
+  .hero-buttons { flex-direction: column; align-items: stretch; gap: 10px; }
+  .hero-buttons .btn-main,
+  .hero-buttons .btn-outline { text-align: center; justify-content: center; padding: 14px 24px; }
+  #robot-img { max-width: 240px; }
+
+  /* About */
+  .pillars { grid-template-columns: 1fr; gap: 12px; }
+  .pillar { padding: 18px; }
+
+  /* Programs */
+  .prog-grid { grid-template-columns: 1fr; gap: 16px; }
+  .prog-grid-3 { grid-template-columns: 1fr; gap: 16px; }
+  .prog-card { padding: 24px 20px; }
+
+  /* Labs */
+  .labs-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lab-card { padding: 12px; gap: 8px; }
+  .lab-card span { font-size: 11px; }
+
+  /* Certs */
+  .certs-radial { width: 230px; height: 230px; margin-top: 32px; }
+  .cert-center { width: 90px; height: 90px; }
+  .cert-center img { width: 56px; }
+  .cert-planet { width: 44px; height: 44px; font-size: 9px; }
+  .cert-vendors-row { gap: 8px; margin-top: 28px; }
+  .cert-vendor-tag { font-size: 11px; padding: 6px 12px; }
+
+  /* Community */
+  .community-grid { grid-template-columns: 1fr; gap: 12px; }
+  .comm-card { padding: 28px 20px; }
+
+  /* Chapter titles */
+  .chapter-title { font-size: clamp(34px, 9vw, 52px); }
+  .chapter-bg-word span { font-size: clamp(60px, 24vw, 220px); opacity: 0.5; }
+
+  /* Contact form */
+  .cf-row { grid-template-columns: 1fr; }
+  .cf input, .cf select, .cf textarea { font-size: 16px; /* prevent iOS zoom */ }
+
+  /* Footer */
+  .foot-grid { grid-template-columns: 1fr; gap: 28px; }
+  #footer { padding: 44px 16px 24px; }
+  .foot-nl { flex-direction: column; gap: 10px; }
+  .foot-nl input, .foot-nl button { width: 100%; }
+  .foot-bottom { flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+
+  /* WhatsApp */
+  #wa { bottom: 16px; right: 14px; }
+  .wa-popup { width: calc(100vw - 28px); right: -4px; bottom: 68px; }
+  .wa-fab { width: 52px; height: 52px; font-size: 22px; }
+
+  /* Roadmap */
+  .roadmap-flow::before { left: 18px; }
+  .rm-node { padding: 16px 0; gap: 16px; }
+  .rm-card { padding: 18px 16px; }
+  .rm-card h3 { font-size: 17px; }
+  .rm-outcome { padding: 24px 16px; }
+  .rm-split-card { padding: 16px; }
+
+  /* Career */
+  .career-timeline { padding-left: 32px; }
+  .career-step h4 { font-size: 17px; }
+}
+
+/* ===== RESPONSIVE – SMALL MOBILE (≤390px) ===== */
+@media (max-width: 390px) {
+  h1.hero-title { font-size: 34px; }
+  .chapter-title { font-size: 30px; }
+  .hero-buttons .btn-main,
+  .hero-buttons .btn-outline { font-size: 12px; padding: 13px 18px; }
+  #robot-img { max-width: 200px; }
+  .certs-radial { width: 200px; height: 200px; }
+}
+
+/* ===== TOUCH DEVICE ENHANCEMENTS ===== */
+@media (hover: none) and (pointer: coarse) {
+  /* Make tap targets bigger on touch screens */
+  .nav-links a { padding: 8px 0; }
+  .btn-main, .btn-outline { padding: 16px 28px; }
+  .wa-opt { padding: 14px 16px; }
+  .social-icon { width: 46px; height: 46px; }
+  .fsoc { width: 44px; height: 44px; font-size: 18px; }
+  .topic { padding: 6px 12px; font-size: 12px; }
+
+  /* Remove hover transforms that feel broken on touch */
+  .prog-card:hover { transform: none; }
+  .pillar:hover { transform: none; }
+  .comm-card:hover { transform: none; }
+  .rm-card:hover { transform: none; }
+  .rm-split-card:hover { transform: none; }
+  .lab-card:hover { transform: translateX(0); }
+  .cert-vendor-tag:hover { background: var(--surf); color: var(--muted); border-color: var(--border); }
+
+  /* Active states instead */
+  .prog-card:active { border-color: rgba(229,9,20,0.5); box-shadow: 0 10px 40px rgba(229,9,20,0.15); }
+  .btn-main:active { background: var(--red2); transform: scale(0.97); }
+  .btn-outline:active { border-color: var(--red); color: var(--red); }
+  .wa-opt:active { background: rgba(37,211,102,0.12); }
+}
+
+/* ===== REAL BRAND SVG ICONS ===== */
+.icon-svg {
+  width: 18px; height: 18px;
+  display: block;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+.social-icon .icon-svg { width: 17px; height: 17px; }
+.fsoc .icon-svg { width: 18px; height: 18px; }
+.ci-icon .icon-svg { width: 22px; height: 22px; }
+.wa-fab .icon-svg { width: 28px; height: 28px; fill: #fff; }
+.wa-av .icon-svg { width: 22px; height: 22px; fill: #fff; }
+.mobile-cta-icon { width: 16px; height: 16px; display: inline-block; vertical-align: middle; margin-right: 5px; fill: currentColor; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+<a href="#" class="nav-logo">
+  <img src="\webpage\assets\logo.png.png" alt="HackWise Academy Logo">
+</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#pathways">Pathways</a></li>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#labs">Labs</a></li>
+    <li><a href="#certs">Certifications</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-enroll">Enroll Now</a>
+  <div class="hamburger" id="hbg" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="mobile-nav" id="mnav">
+  <a href="#about" onclick="closeMenu()">About</a>
+  <a href="#pathways" onclick="closeMenu()">Pathways</a>
+  <a href="#programs" onclick="closeMenu()">Programs</a>
+  <a href="#labs" onclick="closeMenu()">Labs</a>
+  <a href="#certs" onclick="closeMenu()">Certifications</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="#contact" onclick="closeMenu()" class="btn-main" style="font-size:14px;">Enroll Now</a>
+</div>
+
+<!-- ============================================================
+     CHAPTER 1 – HERO
+============================================================ -->
+<section id="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-bg-text">
+    <span class="hero-bg-word" id="bg-word">HACKWISE</span>
+  </div>
+
+  <div class="hero-inner">
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-academy-label">HackWise Academy · Kerala, India</div>
+      <h1 class="hero-title" id="hero-title">
+        <span class="line" id="hl1">Build Skills.</span><br>
+        <span class="line" id="hl2">Hack Smart.</span><br>
+        <span class="line line-red" id="hl3">Secure The<br>Future.</span>
+      </h1>
+      <p class="hero-desc">Industry-oriented cybersecurity training designed to transform beginners into highly skilled security professionals.</p>
+      <div class="hero-buttons">
+        <a href="#programs" class="btn-main">Explore Programs</a>
+        <a href="#contact" class="btn-outline">Book Consultation</a>
+      </div>
+      <div class="hero-socials">
+        <span class="social-label">Follow:</span>
+        <a href="https://instagram.com/hackwiseacademy" target="_blank" class="social-icon" title="Instagram"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://linkedin.com" target="_blank" class="social-icon" title="LinkedIn"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+        <a href="https://youtube.com" target="_blank" class="social-icon" title="YouTube"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+      </div>
+    </div>
+
+    <!-- CENTER: ROBOT -->
+    <div class="hero-robot-wrap" id="robot-wrap">
+      <div class="robot-glow-ring"></div>
+      <div class="robot-shadow"></div>
+    
+      <img id="robot-img" src="\webpage\assets\robot hoodie-Photoroom.png" alt="HackWise Robot Mascot">
+  
+    </div>
+
+    <!-- RIGHT: STATS -->
+    <div class="hero-stats" id="hero-stats">
+      <!-- Stat 1: Students -->
+      <div class="stat-ring" data-count="4" data-label="Tiers">
+        <svg viewBox="0 0 130 130">
+          <circle class="stat-ring-track" cx="65" cy="65" r="58" stroke-width="3"/>
+          <circle class="stat-ring-fill" cx="65" cy="65" r="58" stroke-width="3" stroke-dasharray="364" stroke-dashoffset="364"/>
+        </svg>
+        <div class="stat-content">
+          <div class="stat-num" data-target="4">0</div>
+          <div class="stat-label">Learning Tiers</div>
+        </div>
+      </div>
+      <!-- Stat 2: Labs -->
+      <div class="stat-ring" data-count="50" data-label="Labs">
+        <svg viewBox="0 0 130 130">
+          <circle class="stat-ring-track" cx="65" cy="65" r="58" stroke-width="3"/>
+          <circle class="stat-ring-fill" cx="65" cy="65" r="58" stroke-width="3" stroke-dasharray="364" stroke-dashoffset="364"/>
+        </svg>
+        <div class="stat-content">
+          <div class="stat-num" data-target="50">0</div>
+          <div class="stat-label">Labs</div>
+        </div>
+      </div>
+      <!-- Stat 3: Projects -->
+      <div class="stat-ring" data-count="25" data-label="Projects">
+        <svg viewBox="0 0 130 130">
+          <circle class="stat-ring-track" cx="65" cy="65" r="58" stroke-width="3"/>
+          <circle class="stat-ring-fill" cx="65" cy="65" r="58" stroke-width="3" stroke-dasharray="364" stroke-dashoffset="364"/>
+        </svg>
+        <div class="stat-content">
+          <div class="stat-num" data-target="100">0</div>
+          <div class="stat-label">Projects</div>
+        </div>
+      </div>
+      <!-- Stat 4: Mentors -->
+      <div class="stat-ring" data-count="20" data-label="Mentors">
+        <svg viewBox="0 0 130 130">
+          <circle class="stat-ring-track" cx="65" cy="65" r="58" stroke-width="3"/>
+          <circle class="stat-ring-fill" cx="65" cy="65" r="58" stroke-width="3" stroke-dasharray="364" stroke-dashoffset="364"/>
+        </svg>
+        <div class="stat-content">
+          <div class="stat-num" data-target="20">0</div>
+          <div class="stat-label">Mentors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 2 – ABOUT / LEARN
+============================================================ -->
+<section id="about" class="chapter" style="background:#080808;">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Learn</div>
+  <div class="chapter-bg-word"><span>LEARN</span></div>
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="about-tag reveal">/ Who We Are</div>
+        <h2 class="chapter-title reveal d1">About<br><span class="red">HackWise</span></h2>
+        <p class="body-text reveal d2">HackWise Academy was built with one conviction: the best cybersecurity professionals are forged through practice, not passive learning. We are Kerala's premier cybersecurity training institution.</p>
+        <p class="body-text reveal d2">Our <strong style="color:var(--white)">Vision</strong> is to become South India's most respected cybersecurity training institution, producing professionals who protect the digital infrastructure of tomorrow.</p>
+        <p class="body-text reveal d3">Our <strong style="color:var(--white)">Mission</strong> is to empower the next generation through practical, industry-aligned education with real mentorship, real labs, and real projects.</p>
+        <div class="pillars">
+          <div class="pillar reveal d2">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h4>Industry Mentorship</h4>
+            <p>Learn from 20+ active security practitioners with enterprise experience.</p>
+          </div>
+          <div class="pillar reveal d3">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+            <h4>Real Projects</h4>
+            <p>Build actual portfolio-worthy projects aligned with industry standards.</p>
+          </div>
+          <div class="pillar reveal d4">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v6L4 19H20L15 9V3Z"/><path d="M6 15h12"/></svg></div>
+            <h4>Practical Labs</h4>
+            <p>50+ hands-on labs across every cybersecurity domain.</p>
+          </div>
+          <div class="pillar reveal d5">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L16 9V17H8V9Z"/><path d="M8 13L4 19L8 17"/><path d="M16 13L20 19L16 17"/><path d="M10 17L12 21L14 17"/><circle cx="12" cy="11" r="1.6"/></svg></div>
+            <h4>Career Development</h4>
+            <p>Resume, LinkedIn, mock interviews, and placement support.</p>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual reveal-right">
+        <div class="about-robot-stats left-stats">
+          <div class="mini-stat"><div class="mn">4+</div><div class="ml">Learning Tiers</div></div>
+          <div class="mini-stat"><div class="mn">50+</div><div class="ml">Labs</div></div>
+        </div>
+        <img class="about-robot-mini" src="\webpage\assets\robot hoodie-Photoroom.png" alt="HackWise Robot">
+        <div class="about-robot-stats right-stats">
+          <div class="mini-stat"><div class="mn">20+</div><div class="ml">Projects</div></div>
+          <div class="mini-stat"><div class="mn">25+</div><div class="ml">Mentors</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 3 – LEARNING PATHWAYS
+============================================================ -->
+<section id="pathways" class="chapter">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Begin</div>
+  <div class="chapter-bg-word"><span>BEGIN</span></div>
+  <div class="container">
+    <div style="text-align:center;margin-bottom:16px;" class="reveal">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Learning Pathways</p>
+      <h2 class="chapter-title" style="font-size:clamp(36px,5vw,64px);">Your Journey To<br><span class="red">Cyber Mastery</span></h2>
+    </div>
+    <div class="roadmap-flow">
+      <div class="rm-node reveal d1">
+        <div class="rm-card">
+          <div class="rm-badge">CJCP</div>
+          <h3>Junior Cyber Practitioner</h3>
+          <p>Foundations, networking, Linux, Windows, ethical hacking basics. 3 months · 1 project.</p>
+        </div>
+        <div class="rm-center"><div class="rm-dot"></div></div>
+        <div class="rm-spacer"></div>
+      </div>
+      <div class="rm-node reveal d2">
+        <div class="rm-spacer"></div>
+        <div class="rm-center"><div class="rm-dot"></div></div>
+        <div class="rm-card">
+          <div class="rm-badge">CCSA</div>
+          <h3>Cyber Security Associate</h3>
+          <p>Web & API security, SOC, SIEM, IDS/IPS, EDR/XDR. 6 months · 2 projects.</p>
+        </div>
+      </div>
+      <div style="text-align:center;width:100%;max-width:800px;padding:20px 0;" class="reveal">
+        <p style="font-family:var(--font-m);font-size:11px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;">Choose Your Specialization</p>
+      </div>
+      <div class="rm-split">
+        <div class="rm-split-card reveal d1">
+          <div class="rm-badge">COSP</div>
+          <h4>Offensive Security</h4>
+          <p>Red team · Pentesting · Adversary simulation<br>12 months · 5 projects</p>
+        </div>
+        <div class="rm-split-card reveal d2">
+          <div class="rm-badge">CDSP</div>
+          <h4>Defensive Security</h4>
+          <p>SOC · SIEM · Threat hunting<br>12 months · 5 projects</p>
+        </div>
+        <div class="rm-split-card reveal d3">
+          <div class="rm-badge">CPTP</div>
+          <h4>Purple Team</h4>
+          <p>Combined red & blue · ATT&CK<br>12 months · 5 projects</p>
+        </div>
+      </div>
+      <div class="rm-outcome reveal d4">
+        <h3>Industry Certifications & Career</h3>
+        <p>International certifications supported</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 4 – CJCP + CCSA
+============================================================ -->
+<section id="programs" class="chapter" style="background:#080808;">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Practice</div>
+  <div class="chapter-bg-word"><span>PRACTICE</span></div>
+  <div class="container">
+    <div class="reveal">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Training Programs</p>
+      <h2 class="chapter-title">Our <span class="red">Programs</span></h2>
+    </div>
+    <div class="prog-grid">
+      <div class="prog-card reveal d1">
+        <div class="prog-badge">CJCP</div>
+        <div class="prog-name">Certified Junior Cyber Practitioner</div>
+        <div class="prog-full">Entry-level cybersecurity foundations</div>
+        <div class="prog-dur">⏱ 3 Months</div>
+        <div class="topics-wrap">
+          <div class="topics-label">Core Topics</div>
+          <div class="topics-list">
+            <span class="topic">Cybersecurity Fundamentals</span>
+            <span class="topic">Networking</span>
+            <span class="topic">Linux</span>
+            <span class="topic">Windows</span>
+            <span class="topic">Ethical Hacking Basics</span>
+            <span class="topic">Cyber Defense Basics</span>
+          </div>
+        </div>
+        <div class="prog-foot">
+          <div class="proj-count"><strong>1</strong> Practical Project</div>
+          <a href="#contact" class="btn-outline" style="padding:8px 18px;font-size:12px;">Enroll →</a>
+        </div>
+      </div>
+      <div class="prog-card reveal d2">
+        <div class="prog-badge">CCSA</div>
+        <div class="prog-name">Certified Cyber Security Associate</div>
+        <div class="prog-full">Intermediate security operations</div>
+        <div class="prog-dur">⏱ 6 Months</div>
+        <div class="topics-wrap">
+          <div class="topics-label">Core Topics</div>
+          <div class="topics-list">
+            <span class="topic">Intermediate Networking</span>
+            <span class="topic">Linux & Windows</span>
+            <span class="topic">Web Security</span>
+            <span class="topic">API Security</span>
+            <span class="topic">SOC Operations</span>
+            <span class="topic">SIEM</span>
+            <span class="topic">IDS/IPS</span>
+            <span class="topic">EDR/XDR</span>
+          </div>
+        </div>
+        <div class="prog-foot">
+          <div class="proj-count"><strong>2</strong> Industry Projects</div>
+          <a href="#contact" class="btn-outline" style="padding:8px 18px;font-size:12px;">Enroll →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 5 – COSP (ATTACK)
+============================================================ -->
+<section id="COSP" class="chapter" style="background:linear-gradient(to bottom,#080808,#0a0000);">
+  <div class="chapter-line" style="background:linear-gradient(90deg,transparent,rgba(229,9,20,.8),transparent);opacity:.5;"></div>
+  <div class="chapter-num">Attack</div>
+  <div class="chapter-bg-word"><span style="-webkit-text-stroke:1px rgba(229,9,20,0.5); opacity:0.5;">ATTACK</span></div>
+  <div class="container">
+    <div class="reveal" style="margin-bottom:40px;">
+      <div class="prog-badge" style="font-size:14px;">COSP</div>
+      <h2 class="chapter-title" style="margin-top:12px;">Certified Offensive<br><span class="red">Security Professional</span></h2>
+      <p class="body-text" style="max-width:560px;">The most comprehensive offensive security training in South India. Master every attack vector from web to cloud, mobile to active directory.</p>
+      <p style="font-family:var(--font-m);font-size:12px;color:var(--red);">⏱ 12 Months · 5 Industry Projects</p>
+    </div>
+    <div class="topics-list reveal d1" style="gap:8px;margin-bottom:40px;">
+      <span class="topic" style="font-size:12px;">Advanced Networking</span>
+      <span class="topic" style="font-size:12px;">Advanced Linux</span>
+      <span class="topic" style="font-size:12px;">Advanced Windows</span>
+      <span class="topic" style="font-size:12px;">Active Directory</span>
+      <span class="topic" style="font-size:12px;">Web App Pentesting</span>
+      <span class="topic" style="font-size:12px;">API Pentesting</span>
+      <span class="topic" style="font-size:12px;">Android Pentesting</span>
+      <span class="topic" style="font-size:12px;">Cloud Pentesting</span>
+      <span class="topic" style="font-size:12px;">Network Pentesting</span>
+      <span class="topic" style="font-size:12px;">Red Teaming</span>
+      <span class="topic" style="font-size:12px;">Social Engineering</span>
+      <span class="topic" style="font-size:12px;">CRTA</span>
+      <span class="topic" style="font-size:12px;">AI Security</span>
+      <span class="topic" style="font-size:12px;">AI Pentesting</span>
+      <span class="topic" style="font-size:12px;">GRC Fundamentals</span>
+    </div>
+    <a href="#contact" class="btn-main reveal d2">Enroll in COSP →</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 6 – CDSP (DEFEND)
+============================================================ -->
+<section id="CDSP" class="chapter" style="background:#060610;">
+  <div class="chapter-line" style="background:linear-gradient(90deg,transparent,rgba(100,149,237,.4),transparent);opacity:.5;"></div>
+  <div class="chapter-num">Defend</div>
+  <div class="chapter-bg-word"><span style="-webkit-text-stroke:1px rgba(229,9,20,0.5); opacity:0.5;">DEFEND</span></div>
+  <div class="container">
+    <div class="reveal" style="margin-bottom:40px;">
+      <div class="prog-badge" style="font-size:14px;">CDSP</div>
+      <h2 class="chapter-title" style="margin-top:12px;">Certified Defensive<br><span class="red">Security Professional</span></h2>
+      <p class="body-text" style="max-width:560px;">The most comprehensive offensive security training in South India. Master every attack vector from web to cloud, mobile to active directory.</p>
+      <p style="font-family:var(--font-m);font-size:12px;color:var(--red);">⏱ 12 Months · 5 Industry Projects</p>
+    </div>
+    <div class="topics-list reveal d1" style="gap:8px;margin-bottom:40px;">
+      <span class="topic" style="font-size:12px;">Advanced Networking</span>
+      <span class="topic" style="font-size:12px;">Advanced Linux</span>
+      <span class="topic" style="font-size:12px;">Advanced Windows</span>
+      <span class="topic" style="font-size:12px;">Active Directory</span>
+      <span class="topic" style="font-size:12px;">Offensive Security</span>
+      <span class="topic" style="font-size:12px;">Defensive Security</span>
+      <span class="topic" style="font-size:12px;">Mitre D3fend</span>
+      <span class="topic" style="font-size:12px;">IDS/IPS & EDR/XDR</span>
+      <span class="topic" style="font-size:12px;">SIEM</span>
+      <span class="topic" style="font-size:12px;">SOAR</span>
+      <span class="topic" style="font-size:12px;">Threat Hunting</span>
+      <span class="topic" style="font-size:12px;">Incident Response</span>
+      <span class="topic" style="font-size:12px;">Cloud Security</span>
+      <span class="topic" style="font-size:12px;">AI in Cyber Defense</span>
+      <span class="topic" style="font-size:12px;">GRC Fundamentals</span>
+    </div>
+    <a href="#contact" class="btn-main reveal d2">Enroll in CDSP →</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 7 – CPTP (DETECT / PURPLE)
+============================================================ -->
+<section id="CPTP" class="chapter" style="background:#08060a;">
+  <div class="chapter-line" style="background:linear-gradient(90deg,transparent,rgba(150,50,229,.4),transparent);opacity:.5;"></div>
+  <div class="chapter-num">Detect</div>
+  <div class="chapter-bg-word"><span style="-webkit-text-stroke:1px rgba(229,9,20,0.5); opacity:0.5;">DETECT</span></div>
+  <div class="container">
+    <div class="reveal" style="margin-bottom:40px;">
+      <div class="prog-badge" style="font-size:14px;">CPTP</div>
+      <h2 class="chapter-title" style="margin-top:12px;">Certified Purple<br><span class="red">Team Professional</span></h2>
+      <p class="body-text" style="max-width:560px;">The rarest skill in cybersecurity — the ability to think like an attacker and respond like a defender simultaneously. CPTP trains you to bridge the gap.</p>
+      <p style="font-family:var(--font-m);font-size:12px;color:var(--red);">⏱ 12 Months · 5 Industry Projects</p>
+    </div>
+    <div class="topics-list reveal d1" style="gap:8px;margin-bottom:40px;">
+      <span class="topic" style="font-size:12px;">Advanced Networking</span>
+      <span class="topic" style="font-size:12px;">Advanced Linux</span>
+      <span class="topic" style="font-size:12px;">Advanced Windows</span>
+      <span class="topic" style="font-size:12px;">Active Directory</span>
+      <span class="topic" style="font-size:12px;">Web App Pentesting</span>
+      <span class="topic" style="font-size:12px;">Network Pentesting</span>
+      <span class="topic" style="font-size:12px;">Firewall Management</span>
+      <span class="topic" style="font-size:12px;">IDS/IPS, EDR/XDR</span>
+      <span class="topic" style="font-size:12px;">SIEM</span>
+      <span class="topic" style="font-size:12px;">SOAR</span>
+      <span class="topic" style="font-size:12px;">Red Teaming</span>
+      <span class="topic" style="font-size:12px;">Detection Engineering</span>
+      <span class="topic" style="font-size:12px;">Threat Hunting</span>
+      <span class="topic" style="font-size:12px;">Adversary Emulation</span>
+      <span class="topic" style="font-size:12px;">AI In Purple Teaming</span>
+      <span class="topic" style="font-size:12px;">ATT&CK Framework</span>
+    </div>
+    <a href="#contact" class="btn-main reveal d2">Enroll in CPTP →</a>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 8 – LABS (TRAIN)
+============================================================ -->
+<section id="labs" class="chapter" style="background:#080808;">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Train</div>
+  <div class="chapter-bg-word"><span>TRAIN</span></div>
+  <div class="container">
+    <div class="reveal">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Cyber Range</p>
+      <h2 class="chapter-title">Enterprise-Grade<br><span class="red">Lab Environment</span></h2>
+    </div>
+    <div class="labs-showcase">
+      <div>
+        <div class="labs-grid reveal d1">
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="16" rx="2"/><path d="M7 9.5l3 2.5-3 2.5"/><path d="M12.5 14.5h4.5"/></svg></span><span>Kali Linux Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="4.5" rx="1"/><rect x="2" y="16" width="6" height="4.5" rx="1"/><rect x="16" y="16" width="6" height="4.5" rx="1"/><path d="M12 7v4.5M5 11.5v4.5M19 11.5v4.5M5 11.5h14"/></svg></span><span>Active Directory Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14.5 14.5 0 0 1 0 18"/><path d="M12 3a14.5 14.5 0 0 0 0 18"/></svg></span><span>Web Security Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v4M16 3v4"/><path d="M5 7h14v4a7 7 0 0 1-14 0V7z"/><path d="M12 18v3"/></svg></span><span>API Security Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2"/><path d="M10.5 18.3h3"/></svg></span><span>Android Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.2 4.2 0 0 1 .8-8.3 5.2 5.2 0 0 1 9.9 1.6A3.6 3.6 0 0 1 17.3 18H7z"/></svg></span><span>Cloud Security Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3.2v5.4c0 5-3.1 7.9-7.5 9.1-4.4-1.2-7.5-4.1-7.5-9.1V6.2L12 3z"/><circle cx="12" cy="11.5" r="2.3"/></svg></span><span>SOC Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="13" width="3" height="5"/><rect x="12.5" y="9" width="3" height="9"/><rect x="18" y="5" width="3" height="13"/></svg></span><span>SIEM Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></span><span>Threat Hunting Lab</span></div>
+          <div class="lab-card"><span class="lico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="20" x2="20" y2="4"/><path d="M13 4h7v7"/><line x1="20" y1="20" x2="4" y2="4"/><path d="M11 20H4v-7"/></svg></span><span>Red Team Lab</span></div>
+        </div>
+      </div>
+      <div class="lab-features reveal-right">
+        <div class="lab-feat">
+          <div class="lab-feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.5 2"/></svg></div>
+          <div class="lab-feat-txt">
+            <h4>24/7 Practice Access</h4>
+            <p>Labs are always on. Practice at your own pace, on your own schedule, from any location.</p>
+          </div>
+        </div>
+        <div class="lab-feat">
+          <div class="lab-feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="3.5" width="13" height="18" rx="2"/><path d="M9 3.5h6v3H9z"/><path d="M8.5 13l2.2 2.2L15.5 11"/></svg></div>
+          <div class="lab-feat-txt">
+            <h4>Guided Exercises</h4>
+            <p>Step-by-step missions with real objectives, hints, and validation.</p>
+          </div>
+        </div>
+        <div class="lab-feat">
+          <div class="lab-feat-ico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.2 2.4L4.6 13.6a.8.8 0 0 0 .6 1.3h5l-1.4 7a.8.8 0 0 0 1.4.7l8.6-11.2a.8.8 0 0 0-.6-1.3h-5l1.4-7a.8.8 0 0 0-1.4-.7z"/></svg></div>
+          <div class="lab-feat-txt">
+            <h4>Real Attack Simulations</h4>
+            <p>Replicated attack chains based on real-world threat actors and malware campaigns.</p>
+          </div>
+        </div>
+        <div class="lab-feat">
+          <div class="lab-feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3" width="9" height="18"/><rect x="12.5" y="9.5" width="8" height="11.5"/><path d="M6.5 7h3M6.5 11h3M6.5 15h3M15.5 13.5h2M15.5 17h2"/></svg></div>
+          <div class="lab-feat-txt">
+            <h4>Enterprise Scenarios</h4>
+            <p>Large-scale AD environments, multi-cloud setups, and enterprise SOC simulations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 9 – CERTIFICATIONS (CERTIFY)
+============================================================ -->
+<section id="certs" class="chapter">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Specialization</div>
+  <div class="chapter-bg-word"><span>SPECIALISE</span></div>
+  <div class="container" style="text-align:center;">
+    <div class="reveal">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Cybersecurity Ecosystem</p>
+      <h2 class="chapter-title" style="font-size:clamp(36px,5vw,64px);">We are <span class="red">specialising</span> on</h2>
+    </div>
+    <div class="certs-radial reveal-scale d2">
+      <!-- Orbit 1: r=190 -->
+      <div class="cert-orbit" style="width:380px;height:380px;">
+        <div class="cert-planet" style="left:50%;top:-30px;transform:translateX(-50%);">Red Teaming</div>
+        <div class="cert-planet" style="right:-30px;top:50%;transform:translateY(-50%);">Blue Teaming</div>
+        <div class="cert-planet" style="left:50%;bottom:-30px;transform:translateX(-50%);">Purple Teaming</div>
+        <div class="cert-planet" style="left:-30px;top:50%;transform:translateY(-50%);">SOC Operations</div>
+      </div>
+      <!-- Orbit 2: r=120 -->
+      <div class="cert-orbit cert-orbit-2" style="width:240px;height:240px;">
+        <div class="cert-planet" style="left:50%;top:-30px;transform:translateX(-50%);">Digital Forensics</div>
+        <div class="cert-planet" style="right:-30px;top:50%;transform:translateY(-50%);">Threat Hunting</div>
+        <div class="cert-planet" style="left:50%;bottom:-30px;transform:translateX(-50%);">Cloud Security</div>
+        <div class="cert-planet" style="left:-30px;top:50%;transform:translateY(-50%);">Incident Response</div>
+      </div>
+      <!-- Center logo -->
+      <div class="cert-center">
+        <img src="\webpage\assets\logo hackwise.png" alt="HackWise Logo">
+      </div>
+    </div>
+    <div class="cert-vendors-row reveal d3" style="margin-top:60px;">
+      <div class="cert-vendor-tag">Red Teaming</div>
+      <div class="cert-vendor-tag">Blue Teaming</div>
+      <div class="cert-vendor-tag">Purple Teaming</div>
+      <div class="cert-vendor-tag">SOC Operations</div>
+      <div class="cert-vendor-tag">Digital Forensics</div>
+      <div class="cert-vendor-tag">Threat Hunting</div>
+      <div class="cert-vendor-tag">Cloud Security</div>
+      <div class="cert-vendor-tag">Incident Response</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 10 – CAREER (BUILD)
+============================================================ -->
+<section class="chapter" style="background:#080808;">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Build</div>
+  <div class="chapter-bg-word"><span>BUILD</span></div>
+  <div class="container">
+    <div class="reveal">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Career Development</p>
+      <h2 class="chapter-title">From Student To<br><span class="red">Professional</span></h2>
+      <p class="body-text" style="max-width:560px;">We don't just teach cybersecurity — we place you into the industry. Career development starts from day one.</p>
+    </div>
+    <div class="career-timeline">
+      <div class="career-step reveal d1">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Resume Building</h4>
+        <p>Craft a cybersecurity-specific resume that highlights certifications, projects, and skills in a format that gets past ATS and impresses hiring managers.</p>
+      </div>
+      <div class="career-step reveal d2">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> LinkedIn Optimization</h4>
+        <p>Build a professional presence that attracts recruiters through strategic keyword placement and portfolio content.</p>
+      </div>
+      <div class="career-step reveal d2">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg> Mock Interviews</h4>
+        <p>Practice with realistic technical and HR interviews conducted by industry practitioners, with detailed feedback on every session.</p>
+      </div>
+      <div class="career-step reveal d3">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg> Technical Interview Preparation</h4>
+        <p>Scenario-based questions, CTF-style challenges, and live technical assessments you'll encounter at top security firms.</p>
+      </div>
+      <div class="career-step reveal d4">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="13" y2="14"/></svg> Communication & Personality Development</h4>
+        <p>Stand out not just technically but professionally. Present confidently and carry yourself as a security leader.</p>
+      </div>
+      <div class="career-step reveal d4">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Industry Mentorship</h4>
+        <p>Ongoing guidance from 20+ active security professionals across offensive security, SOC, cloud, and GRC roles.</p>
+      </div>
+      <div class="career-step reveal d5" style="padding-bottom:0;">
+        <h4><svg style="width:18px;height:18px;display:inline-block;vertical-align:middle;margin-right:6px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Placement Support</h4>
+        <p>Direct connections with hiring partners, referral networks, and active job placement assistance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 11 – COMMUNITY (CONNECT)
+============================================================ -->
+<section class="chapter">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Connect</div>
+  <div class="chapter-bg-word"><span>CONNECT</span></div>
+  <div class="container">
+    <div class="reveal" style="margin-bottom:8px;">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Community</p>
+      <h2 class="chapter-title">Join The<br><span class="red">HackWise Community</span></h2>
+    </div>
+    <div class="community-grid">
+      <div class="comm-card reveal d1">
+        <span class="comm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="3" x2="4" y2="21"/><path d="M4 4h12l-3 4 3 4H4"/></svg></span>
+        <h4>CTF Events</h4>
+        <p>Compete in Capture The Flag competitions to sharpen your skills and benchmark against peers.</p>
+      </div>
+      <div class="comm-card reveal d2">
+        <span class="comm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>
+        <h4>Security Workshops</h4>
+        <p>Monthly focused workshops on emerging topics: zero-day research, new attack techniques, defensive tooling.</p>
+      </div>
+      <div class="comm-card reveal d3">
+        <span class="comm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="15" y1="4" x2="9" y2="20"/></svg></span>
+        <h4>Open Source</h4>
+        <p>Contribute to real security tools. Build your GitHub profile and demonstrate initiative to employers.</p>
+      </div>
+      <div class="comm-card reveal d1">
+        <span class="comm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+        <h4>Research Projects</h4>
+        <p>Collaborate on vulnerability research, write-ups, and security publications.</p>
+      </div>
+      <div class="comm-card reveal d2">
+        <span class="comm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="16" rx="2"/><path d="M7 9.5l3 2.5-3 2.5"/><path d="M12.5 14.5h4.5"/></svg></span>
+        <h4>Hackathons</h4>
+        <p>Solve real-world security challenges in time-boxed hackathons with prizes and industry visibility.</p>
+      </div>
+      <div class="comm-card reveal d3">
+        <span class="comm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="5.5" r="2.5"/><circle cx="18.5" cy="5.5" r="2.5"/><circle cx="12" cy="18.5" r="2.5"/><line x1="7.5" y1="6.5" x2="16.5" y2="6.5"/><line x1="6.5" y1="7.5" x2="11" y2="16.5"/><line x1="17.5" y1="7.5" x2="13" y2="16.5"/></svg></span>
+        <h4>Meetups</h4>
+        <p>Regular in-person and virtual meetups with professionals, alumni, and visiting industry experts.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CHAPTER 12 – CONTACT (START)
+============================================================ -->
+<section id="contact" class="chapter" style="background:#080808;">
+  <div class="chapter-line"></div>
+  <div class="chapter-num">Start</div>
+  <div class="chapter-bg-word"><span>START</span></div>
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px;" class="reveal">
+      <p style="font-family:var(--font-m);font-size:11px;letter-spacing:.25em;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Begin Your Journey</p>
+      <h2 class="chapter-title" style="font-size:clamp(36px,5vw,72px);">Start Your<br><span class="red">Cyber Career</span><br>Today</h2>
+    </div>
+    <div class="contact-layout">
+      <div class="contact-robot reveal-left">
+        <img src="\webpage\assets\robot hoodie-Photoroom.png" alt="HackWise Robot">
+      </div>
+      <div class="reveal-right">
+        <div class="contact-info-list">
+          <div class="ci">
+            <div class="ci-icon">📞</div>
+            <div class="ci-text">
+              <h5>Phone</h5>
+              <a href="tel:+919567254305">+91 95672 54305</a>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+            <div class="ci-text">
+              <h5>Email</h5>
+              <a href="mailto:info@hackwiseacademy.com">info@hackwiseacademy.com</a>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></div>
+            <div class="ci-text">
+              <h5>Instagram</h5>
+              <a href="https://instagram.com/hackwiseacademy" target="_blank">@hackwiseacademy</a>
+            </div>
+          </div>
+          <div class="ci">
+            <div class="ci-icon"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>
+            <div class="ci-text">
+              <h5>Location</h5>
+              <p>HackWise Academy, Thiruvananthapuram, Kerala, India</p>
+              <div class="map-card">
+                <iframe
+                src="https://www.google.com/maps?q=HackWise+Academy+Thiruvananthapuram&output=embed"
+                allowfullscreen=""
+                loading="lazy">
+                </iframe>
+
+              <div class="map-overlay">
+                <a href="https://maps.app.goo.gl/DmUjQXyJiUT2ECtz8">
+                </a>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="foot-grid">
+    <div>
+      <div class="foot-logo"><img src="\webpage\assets\logo.png.png" alt="HackWise Academy"></div>
+      <p class="foot-desc">Kerala's premier cybersecurity training institution. Transforming beginners into industry-ready professionals.</p>
+      <div class="foot-socials">
+        <a href="https://instagram.com/hackwiseacademy" target="_blank" class="fsoc" title="Instagram"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://wa.me/919567254305" target="_blank" class="fsoc" title="WhatsApp"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        <a href="mailto:info@hackwiseacademy.com" class="fsoc" title="Email"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></a>
+        <a href="https://maps.app.goo.gl/DmUjQXyJiUT2ECtz8" target="_blank" class="fsoc" title="Location"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Programs</h5>
+      <ul>
+        <li><a href="#programs">CJCP – Junior Practitioner</a></li>
+        <li><a href="#programs">CCSA – Security Associate</a></li>
+        <li><a href="#COSP">COSP – Offensive Security</a></li>
+        <li><a href="#CDSP">CDSP – Defensive Security</a></li>
+        <li><a href="#CPTP">CPTP – Purple Team</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Quick Links</h5>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#pathways">Learning Pathway</a></li>
+        <li><a href="#labs">Cyber Range</a></li>
+        <li><a href="#certs">Certifications</a></li>
+        <li><a href="#contact">Career Development</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h5>Newsletter</h5>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6;">Get cybersecurity insights, CTF tips, and program updates.</p>
+      <div class="foot-nl">
+        <input type="email" placeholder="your@email.com">
+        <button onclick="this.textContent='✓'">Subscribe</button>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px;font-family:var(--font-m);">+91 95672 54305<br>Thiruvananthapuram, Kerala</p>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2025 HackWise Academy. All rights reserved.</p>
+    <div class="foot-tagline">Learn. Practice. Build. Secure.</div>
+  </div>
+</footer>
+
+<!-- MOBILE STICKY CTA BAR -->
+<div id="mobile-cta">
+  <a href="#contact" class="mcta-enroll">Enroll Now</a>
+  <a href="tel:+919567254305" class="mcta-call"><svg class="mobile-cta-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> Call Us</a>
+</div>
+
+<!-- WHATSAPP WIDGET -->
+<div id="wa">
+  <div class="wa-popup" id="wapop">
+    <div class="wa-head">
+      <div class="wa-av"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div class="wa-head-info">
+        <h5>HackWise Academy</h5>
+        <p>Usually replies in minutes · Online</p>
+      </div>
+    </div>
+    <div class="wa-body">
+      <div class="wa-bubble">
+        <p>👋 Welcome to <strong>HackWise Academy</strong></p>
+        <p style="margin-top:6px;">How can we help you?</p>
+        <div class="wt">Today</div>
+      </div>
+      <div class="wa-opts">
+        <a class="wa-opt" href="https://wa.me/919567254305?text=Hi!+I'd+like+to+learn+about+the+courses+at+HackWise+Academy." target="_blank">📚 Learn About Courses</a>
+        <a class="wa-opt" href="https://wa.me/919567254305?text=Hi!+I'd+like+to+book+a+free+consultation+at+HackWise+Academy." target="_blank">📅 Book Free Consultation</a>
+        <a class="wa-opt" href="https://wa.me/919567254305?text=Hi!+I+need+certification+guidance+from+HackWise+Academy." target="_blank">🏆 Certification Guidance</a>
+        <a class="wa-opt" href="https://wa.me/919567254305?text=Hi!+I+need+career+support+from+HackWise+Academy." target="_blank">🚀 Career Support</a>
+      </div>
+    </div>
+  </div>
+  <div class="wa-fab" onclick="toggleWA()"><svg class="icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+</div>
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script>
+/* NAV + MOBILE CTA */
+const mobileCTA = document.getElementById('mobile-cta');
+function updateMobileCTA() {
+  const isMobile = window.innerWidth <= 860;
+  if (isMobile) {
+    mobileCTA.style.display = window.scrollY > 80 ? 'flex' : 'none';
+  } else {
+    mobileCTA.style.display = 'none';
+  }
+}
+
+/* HACKWISE BG WORD — moves inside robot-wrap on mobile so it floats with the robot */
+(function() {
+  const bgText   = document.getElementById('bg-word');       // the original span
+  const bgWrap   = bgText ? bgText.parentElement : null;     // .hero-bg-text div
+  const robotWrap = document.getElementById('robot-wrap');
+
+  let inlineWord = null;  // the cloned span we put inside robot-wrap
+
+  function syncBgWord() {
+    const isMobile = window.innerWidth <= 860;
+
+    if (isMobile) {
+      // On mobile: hide the original, show clone inside robot-wrap
+      if (bgWrap) bgWrap.style.display = 'none';
+
+      if (!inlineWord) {
+        inlineWord = document.createElement('span');
+        inlineWord.className = 'hero-bg-word-inline';
+        inlineWord.textContent = 'HACKWISE';
+        // Insert BEFORE robot-img so it's under it in DOM (z-index handles visual order)
+        const robotImg = document.getElementById('robot-img');
+        robotWrap.insertBefore(inlineWord, robotImg);
+      }
+      inlineWord.style.display = 'block';
+
+    } else {
+      // On desktop/tablet: restore original, hide clone
+      if (bgWrap) bgWrap.style.display = 'flex';
+      if (inlineWord) inlineWord.style.display = 'none';
+    }
+  }
+
+  // Run on load and on resize
+  document.addEventListener('DOMContentLoaded', syncBgWord);
+  window.addEventListener('resize', syncBgWord);
+  // Also run immediately in case DOMContentLoaded already fired
+  if (document.readyState !== 'loading') syncBgWord();
+})();
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 30);
+  updateMobileCTA();
+}, { passive: true });
+window.addEventListener('resize', updateMobileCTA);
+updateMobileCTA();
+
+function toggleMenu() {
+  document.getElementById('hbg').classList.toggle('open');
+  document.getElementById('mnav').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('mnav').classList.contains('open') ? 'hidden' : '';
+}
+function closeMenu() {
+  document.getElementById('hbg').classList.remove('open');
+  document.getElementById('mnav').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* WHATSAPP */
+let waOpen = false;
+function toggleWA() {
+  waOpen = !waOpen;
+  document.getElementById('wapop').classList.toggle('open', waOpen);
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('wa').contains(e.target)) {
+    waOpen = false;
+    document.getElementById('wapop').classList.remove('open');
+  }
+});
+
+/* FORM */
+function cfSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('cfsuccess').style.display = 'block';
+    e.target.reset();
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+  }, 1200);
+}
+
+/* SMOOTH SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+/* ── INTERSECTION OBSERVER FOR SCROLL REVEALS ── */
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('up'); } });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ── STAT COUNTERS + RING ANIMATION ── */
+let statsAnimated = false;
+function animateStats() {
+  if (statsAnimated) return;
+  statsAnimated = true;
+  const rings = document.querySelectorAll('.stat-ring');
+  rings.forEach(ring => {
+    const target = parseInt(ring.dataset.count);
+    const numEl = ring.querySelector('.stat-num');
+    const fillEl = ring.querySelector('.stat-ring-fill');
+    const circumference = 364;
+    let current = 0;
+    const pct = Math.min(target / 550, 0.9);
+    const offset = circumference - (pct * circumference);
+    fillEl.style.strokeDashoffset = offset;
+    const step = target / 80;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      numEl.textContent = Math.round(current) + '+';
+      if (current >= target) clearInterval(timer);
+    }, 20);
+  });
+}
+
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) animateStats(); });
+}, { threshold: 0.3 });
+const statsEl = document.getElementById('hero-stats');
+if (statsEl) statsObs.observe(statsEl);
+setTimeout(animateStats, 800);
+
+/* ── GSAP HERO TITLE ── */
+if (typeof gsap !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.from('#hl1', { y: 100, opacity: 0, duration: 1, ease: 'power4.out', delay: .3 });
+  gsap.from('#hl2', { y: 100, opacity: 0, duration: 1, ease: 'power4.out', delay: .5 });
+  gsap.from('#hl3', { y: 100, opacity: 0, duration: 1, ease: 'power4.out', delay: .7 });
+  gsap.from('.hero-academy-label', { opacity: 0, x: -20, duration: .8, delay: .2 });
+  gsap.from('.hero-desc', { opacity: 0, y: 20, duration: .8, delay: 1 });
+  gsap.from('.hero-buttons', { opacity: 0, y: 20, duration: .8, delay: 1.2 });
+  gsap.from('.hero-socials', { opacity: 0, y: 20, duration: .8, delay: 1.4 });
+  gsap.from('#robot-img', { scale: .85, opacity: 0, duration: 1.2, ease: 'back.out(1.4)', delay: .4 });
+  gsap.from('#hero-stats .stat-ring', { opacity: 0, x: 30, stagger: .15, duration: .8, delay: .6 });
+
+  /* Parallax bg word on scroll */
+  gsap.to('#bg-word', {
+    yPercent: -30,
+    ease: 'none',
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+
+  /* Robot parallax */
+  gsap.to('#robot-img', {
+    yPercent: -15,
+    ease: 'none',
+    scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+  });
+}
+</script>
+</body>
+</html>
