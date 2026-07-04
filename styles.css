@@ -824,7 +824,7 @@ h1.hero-title .line-red { color: var(--red); }
   box-shadow: 0 0 30px rgba(229,9,20,0.15);
   transform: translateY(-4px);
 }
-.rm-split-card h4 {
+.rm-split-card h3 {
   font-family: var(--font-d);
   font-size: 16px;
   font-weight: 800;
